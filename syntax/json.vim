@@ -1,8 +1,8 @@
 " Vim syntax file
 " Language:	JSON
 " Maintainer:	Jeroen Ruigrok van der Werven <asmodai@in-nomine.org>
-" Last Change:	2007-07-06
-" Version:      0.1
+" Last Change:	2007-07-10
+" Version:      0.2
 " {{{1
 
 " Syntax setup {{{2
@@ -19,8 +19,7 @@ if !exists("main_syntax")
 endif
 
 " Syntax: Strings {{{2
-" TODO: Fix up string keys displaying.
-syn region  jsonString    start=+"+  skip=+\\\\\|\\"+  end=+"\|$+  contains=jsonEscape
+syn region  jsonString    start=+"+  skip=+\\\\\|\\"+  end=+"+  contains=jsonEscape
 
 " Syntax: Escape sequences {{{3
 syn match   jsonEscape    "\\["\\/bfnrt]" contained
