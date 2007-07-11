@@ -1,8 +1,8 @@
 " Vim syntax file
 " Language:	JSON
 " Maintainer:	Jeroen Ruigrok van der Werven <asmodai@in-nomine.org>
-" Last Change:	2007-07-10
-" Version:      0.2
+" Last Change:	2007-07-11
+" Version:      0.3
 " {{{1
 
 " Syntax setup {{{2
@@ -20,17 +20,21 @@ endif
 
 " Syntax: Strings {{{2
 syn region  jsonString    start=+"+  skip=+\\\\\|\\"+  end=+"+  contains=jsonEscape
+" Syntax: JSON does not allow strings with single quotes, unlike JavaScript.
+syn region  jsonStringSQ  start=+'+  skip=+\\\\\|\\"+  end=+'+
 
 " Syntax: Escape sequences {{{3
 syn match   jsonEscape    "\\["\\/bfnrt]" contained
 syn match   jsonEscape    "\\u\x\{4}" contained
 
 " Syntax: Numbers {{{2
-" TODO: Fix up displaying.
-syn cluster jsonNumber    contains=jsonInteger,jsonFraction,jsonExponent
-syn match   jsonInteger   "-\=\d\+"
-syn match   jsonFraction  ".\s+\d+"
-syn match   jsonExponent  "[eE][-\+]\=\s+\d\+"
+syn match   jsonInteger   "-\=\<[1-9]\d*\>"
+syn match   jsonFraction  "-\=\<\([1-9]\d*\|0\)\.\d\+\>"
+syn match   jsonExponent  "-\=\<[1-9]\d*[eE][+-]\=\d\+\>"
+syn match   jsonFracExp   "-\=\<\([1-9]\d*\|0\)\.\d\+[eE][+-]\=\d\+\>"
+
+" Syntax: An integer part of 0 followed by other digits is not allowed.
+syn match   jsonNumError  "-\=\<0\d.*\>"
 
 " Syntax: Boolean {{{2
 syn keyword jsonBoolean   true false
@@ -57,9 +61,13 @@ if version >= 508 || !exists("did_json_syn_inits")
   HiLink jsonInteger		Number
   HiLink jsonFraction		Number
   HiLink jsonExponent		Number
+  HiLink jsonFracExp            Number
   HiLink jsonBraces		Operator
   HiLink jsonNull		Function
   HiLink jsonBoolean		Boolean
+
+  HiLink jsonNumError           Error
+  HiLink jsonStringSQ           Error
   delcommand HiLink
 endif
 
